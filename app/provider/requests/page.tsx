@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { collection, query, where, onSnapshot, doc, updateDoc } from "firebase/firestore"
+import { collection, query, where, onSnapshot, doc, getDoc,updateDoc } from "firebase/firestore"
 import { db } from "@/lib/firebase"
 import { useAuth } from "@/contexts/auth-context"
 import type { ServiceRequest } from "@/types"
@@ -64,10 +64,10 @@ export default function ProviderRequestsPage() {
 
     try {
       // Primero obtenemos la solicitud para tener el ID del cliente
-      const requestRef = doc(db, "serviceRequests", requestId)
-      const requestSnapshot = await requestRef.get()
-      const requestData = requestSnapshot.data()
 
+      const requestRef = doc(db, "serviceRequests", requestId)
+      const requestSnapshot = await getDoc(requestRef)
+      const requestData = requestSnapshot.data()
       if (!requestData) {
         throw new Error("No se encontró la solicitud")
       }
