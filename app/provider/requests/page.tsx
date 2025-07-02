@@ -102,7 +102,7 @@ export default function ProviderRequestsPage() {
     try {
       // Primero obtenemos la solicitud para tener el ID del cliente
       const requestRef = doc(db, "serviceRequests", requestId)
-      const requestSnapshot = await requestRef.get()
+      const requestSnapshot = await getDoc(requestRef)
       const requestData = requestSnapshot.data()
 
       if (!requestData || !user) {
@@ -137,7 +137,7 @@ export default function ProviderRequestsPage() {
     try {
       // Primero obtenemos la solicitud para tener el ID del cliente
       const requestRef = doc(db, "serviceRequests", requestId)
-      const requestSnapshot = await requestRef.get()
+      const requestSnapshot = await getDoc(requestRef)
       const requestData = requestSnapshot.data()
 
       if (!requestData || !user) {
