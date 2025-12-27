@@ -1,20 +1,33 @@
 import { http } from "../https"
 import type { Driver } from "@/types"
 
-export function createDriver(driver: Driver) {
-  return http<void>("/drivers", {
+export type CreateDriverDTO = Omit<
+  Driver,
+  "id" | "vehicleId" | "location"
+>
+
+export function createDriver(data: CreateDriverDTO) {
+  return http<{ id: string }>("/drivers", {
     method: "POST",
-    body: JSON.stringify(driver)
+    body: JSON.stringify(data)
   })
 }
 
-export function getdriverById(id: string) {
+export function getDriverById(id: string) {
   return http<Driver>(`/drivers/${id}`)
 }
 
-export function updatedriver(
+export function getDriversByProvider(providerId: string) {
+  return http<Driver[]>(`/drivers?providerId=${providerId}`)
+}
+
+export type UpdateDriverDTO = Partial<
+  Pick<Driver, "status" | "location" | "vehicleId">
+>
+
+export function updateDriver(
   id: string,
-  data: Partial<Driver>
+  data: UpdateDriverDTO
 ) {
   return http<void>(`/drivers/${id}`, {
     method: "PUT",
@@ -22,12 +35,19 @@ export function updatedriver(
   })
 }
 
-export function getAllDrivers() {
-  return http<Driver[]>("/drivers")
+export type AssignVehicleDTO = {
+  vehicleId: string
 }
 
-export function deleteDriver(id: string) {
-  return http<void>(`/drivers/${id}`, {
-    method: "DELETE"
-  })
+export function assignVehicleToDriver(
+  driverId: string,
+  data: AssignVehicleDTO
+) {
+  return http<void>(
+    `/drivers/${driverId}/assign-vehicle`,
+    {
+      method: "PUT",
+      body: JSON.stringify(data)
+    }
+  )
 }

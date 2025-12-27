@@ -1,30 +1,36 @@
 import { http } from "../https"
 import type { Vehicle } from "@/types"
 
-export function createVehicle(Vehicle: Vehicle) {
-  return http<void>("/vehicules", {
+export type CreateVehicleDTO = Omit<
+  Vehicle,
+  "id" | "location" | "driverId"
+>
+
+export function createVehicle(data: CreateVehicleDTO) {
+  return http<{ id: string }>("/vehicles", {
     method: "POST",
-    body: JSON.stringify(Vehicle)
-  })
-}
-
-export function getVehicleById(id: string) {
-  return http<Vehicle>(`/vehicules/${id}`)
-}
-
-export function updateVehicle(id: string, data: Partial<Vehicle>) {
-  return http<void>(`/vehicules/${id}`, {
-    method: "PUT",
     body: JSON.stringify(data)
   })
 }
 
-export function deleteVehicle(id: string) {
-  return http<void>(`/vehicules/${id}`, {
-    method: "DELETE"
-  })
+export function getVehicleById(id: string) {
+  return http<Vehicle>(`/vehicles/${id}`)
 }
 
-export function getAllVehicles() {
-  return http<Vehicle[]>("/vehicules")
+export function getVehiclesByProvider(providerId: string) {
+  return http<Vehicle[]>(`/vehicles?providerId=${providerId}`)
+}
+
+export type UpdateVehicleDTO = Partial<
+  Pick<Vehicle, "status" | "location" | "driverId">
+>
+
+export function updateVehicle(
+  id: string,
+  data: UpdateVehicleDTO
+) {
+  return http<void>(`/vehicles/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data)
+  })
 }
